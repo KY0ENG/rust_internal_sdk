@@ -144,8 +144,8 @@ namespace utils
 	}
 	namespace math
 	{
-		constexpr float r2d = 57.2957795131f;
-		constexpr float d2r = 0.01745329251f;
+		constexpr auto r2d = 57.2957795131f; /* 180 / pi, used for conversion from radians to degrees */
+		constexpr auto d2r = 0.01745329251f; /* pi / 180, used for conversion from degrees to radians */
 
 		__forceinline geo::vec3_t calculate_angle( const geo::vec3_t& source, const geo::vec3_t& destination )
 		{
