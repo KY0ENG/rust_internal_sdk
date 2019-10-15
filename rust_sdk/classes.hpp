@@ -89,6 +89,12 @@ struct base_player
 	std::uint32_t team;
 };
 
+struct base_camera
+{
+	char pad_0[ 0x2e4 ];
+	geo::mat4x4_t view_matrix;
+};
+
 struct unk2
 {
 	char pad_0[ 0x28 ];
@@ -99,6 +105,23 @@ struct game_object
 {
 	char pad_0[ 0x18 ];
 	unk2* unk;
+};
+
+struct mono_object
+{
+	char pad_1[ 0x30 ];
+	game_object* object;
+	char pad_2[ 0x1c ];
+	std::uint16_t tag;
+	char pad_3[ 0xa ];
+	mono_string* name;
+};
+
+struct unk1
+{
+	char pad_0[ 0x8 ];
+	unk1* next;
+	mono_object* object;
 };
 
 struct buffer_list

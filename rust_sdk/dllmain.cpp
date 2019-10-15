@@ -7,9 +7,10 @@
 #include "utils.hpp"
 
 std::vector<base_player*> entities;
+std::atomic<base_camera*> camera;
 std::atomic_bool should_exit( false );
 
-void __stdcall loop_thread( void* base_networkable )
+void __stdcall entity_loop_thread( void* base_networkable )
 {
 	while ( !should_exit )
 	{
@@ -71,6 +72,26 @@ void __stdcall loop_thread( void* base_networkable )
 	}
 }
 
+void __stdcall camera_loop_thread( void* game_object_manager )
+{
+	while ( !should_exit )
+	{
+		const auto last_object = *reinterpret_cast< unk1** >( game_object_manager );
+		const auto first_object = *reinterpret_cast< unk1** >( std::uintptr_t( game_object_manager ) + 0x8 );
+
+		for ( auto object = first_object; object != last_object; object = object->next )
+		{
+			if ( object->object->tag == 5 )
+			{
+				camera.store( reinterpret_cast< base_camera* >( object->object->object->unk ) );
+				break;
+			}
+		}
+
+		std::this_thread::sleep_for( std::chrono::seconds( 20 ) );
+	}
+}
+
 void __stdcall main_thread( HMODULE module )
 {
 	AllocConsole( );
@@ -89,8 +110,22 @@ void __stdcall main_thread( HMODULE module )
 
 	std::printf( "BaseNetworkable: 0x%llx\n", ( base_networkable - std::uintptr_t( GetModuleHandleA( "GameAssembly.dll" ) ) ) );
 
-	std::thread entity_iteration( &loop_thread, *reinterpret_cast< void** >( base_networkable ) );
+	std::thread entity_iteration( &entity_loop_thread, *reinterpret_cast< void** >( base_networkable ) );
 
+	const auto game_object_manager_address = utils::memory::find_signature( "UnityPlayer.dll", "48 89 05 ? ? ? ? 48 83 c4 38 c3 48 c7 05 ? ? ? ? ? ? ? ? 48 83 c4 38 c3 cc cc cc cc cc 48" );
+
+	if ( !game_object_manager_address )
+		return;
+
+	const auto game_object_manager = reinterpret_cast< std::uintptr_t >( game_object_manager_address + *reinterpret_cast< std::int32_t* >( game_object_manager_address + 3 ) + 7 );
+
+	if ( !game_object_manager )
+		return;
+
+	std::printf( "GameObjectManager: 0x%llx\n", ( game_object_manager - std::uintptr_t( GetModuleHandleA( "UnityPlayer.dll" ) ) ) );
+
+	std::thread etc_iteration( &camera_loop_thread, *reinterpret_cast< void** >( game_object_manager ) );
+	
 	while ( !GetAsyncKeyState( VK_END ) )
 	{
 		static base_player* local_player = nullptr;
@@ -114,6 +149,7 @@ void __stdcall main_thread( HMODULE module )
 
 	should_exit = true;
 	entity_iteration.join( );
+	etc_iteration.join( );
 
 	fclose( reinterpret_cast< FILE* >( stdin ) );
 	fclose( reinterpret_cast< FILE* >( stdout ) );

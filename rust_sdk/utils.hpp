@@ -45,7 +45,7 @@ namespace utils
 					break;
 				}
 
-				const auto ptr = *reinterpret_cast< void** >( address + element );
+				const auto ptr = *reinterpret_cast< void* >( address + element );
 
 				if ( !ptr )
 					break;
@@ -58,8 +58,7 @@ namespace utils
 
 		template <std::size_t N>
 		std::uint8_t* find_signature( const std::string_view module_name, const char( &signature )[ N ] )
-		{
-			/* buck */
+		{		/* buck */
 			std::array<std::optional<std::uint8_t>, N> bytes{};
 			{
 				std::vector<std::string> split_signature;
@@ -172,6 +171,33 @@ namespace utils
 			aim_angle.y = std::abs( aim_angle.y );
 
 			return aim_angle.x + aim_angle.y;
+		}
+	}
+	namespace render
+	{
+		bool world_to_screen( base_camera* camera, geo::vec3_t& world, geo::vec2_t* screen )
+		{
+			const auto matrix = camera->view_matrix.transpose( );
+
+			const geo::vec3_t translation = { matrix[ 3 ][ 0 ], matrix[ 3 ][ 1 ], matrix[ 3 ][ 2 ] };
+			const geo::vec3_t up = { matrix[ 1 ][ 0 ], matrix[ 1 ][ 1 ], matrix[ 1 ][ 2 ] };
+			const geo::vec3_t right = { matrix[ 0 ][ 0 ], matrix[ 0 ][ 1 ], matrix[ 0 ][ 2 ] };
+
+			const auto w = translation.dot_product( world ) + matrix[ 3 ][ 3 ];
+
+			if ( w < 0.1f )
+				return false;
+
+			const auto x = right.dot_product( world ) + matrix[ 0 ][ 3 ];
+			const auto y = up.dot_product( world ) + matrix[ 1 ][ 3 ];
+
+			*screen =
+				{
+					( 1920.f * 0.5f ) * ( 1.f + x / w ),
+					( 1080.f * 0.5f ) * ( 1.f - y / w )
+				};
+
+			return true;
 		}
 	}
 }
