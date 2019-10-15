@@ -45,7 +45,7 @@ namespace utils
 					break;
 				}
 
-				const auto ptr = *reinterpret_cast< void* >( address + element );
+				const auto ptr = *reinterpret_cast< void** >( address + element );
 
 				if ( !ptr )
 					break;
