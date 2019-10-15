@@ -167,8 +167,7 @@ namespace utils
 			else if ( aim_angle.y < -180.f )
 				aim_angle.y += 360.f;
 
-			aim_angle.x = std::abs( aim_angle.x );
-			aim_angle.y = std::abs( aim_angle.y );
+			aim_angle.make_absolute( );
 
 			return aim_angle.x + aim_angle.y;
 		}
