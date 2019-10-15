@@ -145,6 +145,13 @@ namespace geo
 			return x == input.x && y == input.y && z == input.z;
 		}
 
+		void make_absolute( )
+		{
+			x = std::abs(x);
+			y = std::abs(y);
+			z = std::abs(z);
+		}
+		
 		float length_sqr( ) const
 		{
 			return ( x * x ) + ( y * y ) + ( z * z );
