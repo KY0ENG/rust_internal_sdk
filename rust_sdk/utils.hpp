@@ -135,7 +135,7 @@ namespace utils
 
 				geo::vec3_t position{};
 		
-				const auto get_position_injected = reinterpret_cast< uint64_t( __fastcall* )( void*, geo::vec3_t& ) >( std::uintptr_t( GetModuleHandleA( "UnityPlayer.dll" ) ) + 0x9276a0 );
+				static const auto get_position_injected = reinterpret_cast< uint64_t( __fastcall* )( void*, geo::vec3_t& ) >( std::uintptr_t( GetModuleHandleA( "UnityPlayer.dll" ) ) + 0x9276a0 );
 				get_position_injected( transform, position );
 
 				return position;
