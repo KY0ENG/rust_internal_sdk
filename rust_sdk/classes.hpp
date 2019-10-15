@@ -5,6 +5,13 @@
 
 std::mutex entity_mutex;
 
+template <typename t>
+struct mono_array
+{
+	char pad_0[0x20];
+	t array[];
+};
+
 struct mono_string
 {
 	char pad_0[ 0x10 ];
