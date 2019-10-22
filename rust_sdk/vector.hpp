@@ -1,12 +1,6 @@
 #pragma once
 #include <algorithm>
-#include <array>
-#include <vector>
 #include <cmath>
-#include <limits>
-#include <numeric>
-#undef max
-#undef min
 
 namespace geo
 {
