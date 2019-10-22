@@ -7,7 +7,7 @@
 #include "utils.hpp"
 
 std::vector<base_player*> entities;
-std::atomic<base_camera*> camera;
+std::atomic<base_camera*> camera( nullptr );
 std::atomic_bool should_exit( false );
 
 void __stdcall entity_loop_thread( void* base_networkable )
