@@ -17,6 +17,7 @@ namespace geo
 		{
 			x = y = 0.f;
 		}
+		
 		vector2( float fx, float fy )
 		{
 			x = fx;
@@ -29,30 +30,36 @@ namespace geo
 		{
 			return vector2{ x + input.x, y + input.y };
 		}
+		
 		vector2 operator-( const vector2& input ) const
 		{
 			return vector2{ x - input.x, y - input.y };
 		}
+		
 		vector2 operator/( float input ) const
 		{
 			return vector2{ x / input, y / input };
 		}
+		
 		vector2 operator*( float input ) const
 		{
 			return vector2{ x * input, y * input };
 		}
+		
 		vector2& operator-=( const vector2& v )
 		{
 			x -= v.x;
 			y -= v.y;
 			return *this;
 		}
+		
 		vector2& operator/=( float input )
 		{
 			x /= input;
 			y /= input;
 			return *this;
 		}
+		
 		vector2& operator*=( float input )
 		{
 			x *= input;
@@ -93,6 +100,7 @@ namespace geo
 		{
 			x = y = z = 0.f;
 		}
+		
 		vector3( float fx, float fy, float fz )
 		{
 			x = fx;
@@ -106,18 +114,22 @@ namespace geo
 		{
 			return vector3{ x + input.x, y + input.y, z + input.z };
 		}
+		
 		vector3 operator-( const vector3& input ) const
 		{
 			return vector3{ x - input.x, y - input.y, z - input.z };
 		}
+		
 		vector3 operator/( float input ) const
 		{
 			return vector3{ x / input, y / input, z / input };
 		}
+		
 		vector3 operator*( float input ) const
 		{
 			return vector3{ x * input, y * input, z * input };
 		}
+		
 		vector3& operator-=( const vector3& v )
 		{
 			x -= v.x;
@@ -126,6 +138,7 @@ namespace geo
 
 			return *this;
 		}
+		
 		vector3& operator/=( float input )
 		{
 			x /= input;
@@ -133,6 +146,7 @@ namespace geo
 			z /= input;
 			return *this;
 		}
+		
 		vector3& operator*=( float input )
 		{
 			x *= input;
@@ -140,6 +154,7 @@ namespace geo
 			z *= input;
 			return *this;
 		}
+		
 		bool operator==( const vector3& input ) const
 		{
 			return x == input.x && y == input.y && z == input.z;
@@ -198,11 +213,6 @@ namespace geo
 		bool empty( ) const
 		{
 			return x == 0.f && y == 0.f && z == 0.f;
-		}
-
-		bool empty_euler( ) const
-		{
-			return x == 0.f || y == 0.f;
 		}
 	};
 
