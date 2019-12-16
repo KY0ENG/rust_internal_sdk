@@ -32,30 +32,6 @@ namespace utils
 			*reinterpret_cast< t* >( address ) = data;
 		}
 
-		template <typename t, std::size_t n> t read_array( std::uintptr_t const address, std::array<std::uintptr_t, n>& offsets )
-		{
-			t final_address{};
-			void* cached_address = nullptr;
-
-			for ( const auto& element : offsets )
-			{
-				if ( cached_address && element == offsets.back( ) )
-				{
-					final_address = *reinterpret_cast< t* >( cached_address + element );
-					break;
-				}
-
-				const auto ptr = *reinterpret_cast< void* >( address + element );
-
-				if ( !ptr )
-					break;
-
-				cached_address = ptr;
-			}
-
-			return final_address;
-		}
-
 		template <std::size_t N>
 		std::uint8_t* find_signature( const std::string_view module_name, const char( &signature )[ N ] )
 		{		/* buck */
